@@ -1,0 +1,12 @@
+@import "tailwindcss";
+
+/* 自定义主题变量 */
+:root {
+  --color-primary: #3b82f6;
+  --color-primary-hover: #2563eb;
+}
+
+.dark {
+  --color-primary: #60a5fa;
+  --color-primary-hover: #3b82f6;
+}
