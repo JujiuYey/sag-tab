@@ -3,7 +3,7 @@
   "name": "sag-tab",
   "version": "1.0.0",
   "description": "极简风格的浏览器新标签页扩展，帮助用户快速访问常用网站",
-  "permissions": ["storage"],
+  "permissions": ["storage", "unlimitedStorage"],
   "chrome_url_overrides": {
     "newtab": "index.html"
   },

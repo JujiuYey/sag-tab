@@ -2,6 +2,7 @@ const STORAGE_KEYS = {
   BOOKMARKS: 'sag-tab-bookmarks',
   FOLDERS: 'sag-tab-folders',
   SETTINGS: 'sag-tab-settings',
+  BACKGROUND_IMAGE: 'sag-tab-background-image',
 } as const
 
 type StorageKey = (typeof STORAGE_KEYS)[keyof typeof STORAGE_KEYS]

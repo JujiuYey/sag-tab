@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useSettingsStore } from '@/stores'
 import type { BackgroundType } from '@/types'
+import ImageBackgroundPicker from './ImageBackgroundPicker.vue'
 
 const settingsStore = useSettingsStore()
 
@@ -26,6 +27,11 @@ const gradients = [
 function setBackground(type: BackgroundType, value: string) {
   settingsStore.setBackground({ type, value })
 }
+
+function isSelected(type: BackgroundType, value: string): boolean {
+  const bg = settingsStore.settings.background
+  return bg.type === type && bg.value === value
+}
 </script>
 
 <template>
@@ -38,8 +44,8 @@ function setBackground(type: BackgroundType, value: string) {
           :key="color"
           class="h-8 w-8 rounded-lg border-2 transition-transform hover:scale-110"
           :class="{
-            'border-blue-500': settingsStore.settings.background.type === 'solid' && settingsStore.settings.background.value === color,
-            'border-transparent': !(settingsStore.settings.background.type === 'solid' && settingsStore.settings.background.value === color),
+            'border-blue-500': isSelected('solid', color),
+            'border-transparent': !isSelected('solid', color),
           }"
           :style="{ backgroundColor: color }"
           @click="setBackground('solid', color)"
@@ -55,13 +61,17 @@ function setBackground(type: BackgroundType, value: string) {
           :key="gradient"
           class="h-8 w-8 rounded-lg border-2 transition-transform hover:scale-110"
           :class="{
-            'border-blue-500': settingsStore.settings.background.type === 'gradient' && settingsStore.settings.background.value === gradient,
-            'border-transparent': !(settingsStore.settings.background.type === 'gradient' && settingsStore.settings.background.value === gradient),
+            'border-blue-500': isSelected('gradient', gradient),
+            'border-transparent': !isSelected('gradient', gradient),
           }"
           :style="{ background: gradient }"
           @click="setBackground('gradient', gradient)"
         />
       </div>
     </div>
+
+    <hr class="border-gray-200 dark:border-gray-700" />
+
+    <ImageBackgroundPicker />
   </div>
 </template>

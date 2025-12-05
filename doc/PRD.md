@@ -121,9 +121,14 @@ sag-tab
 - 支持手动切换
 
 #### 2.5.2 背景设置
-- 纯色背景
-- 简单渐变背景
-- 预设几种配色方案供选择
+- 纯色背景：预设 7 种颜色供选择
+- 渐变背景：预设 6 种渐变效果供选择
+- 自定义图片背景：
+  - 支持上传本地图片（JPG、PNG、GIF、WebP）
+  - 图片自动压缩（最大 1920x1080，目标 500KB）
+  - 展示模式：覆盖、适应、填充、平铺、居中
+  - 遮罩层：可调节透明度（0-80%）
+  - 背景模糊：可调节模糊程度（0-20px）
 
 ---
 
@@ -210,12 +215,25 @@ interface Group {
   order: number;
 }
 
+// 图片展示模式
+type ImageDisplayMode = 'cover' | 'contain' | 'fill' | 'tile' | 'center';
+
+// 图片配置
+interface ImageConfig {
+  displayMode: ImageDisplayMode;
+  overlay: boolean;
+  overlayColor: string;
+  overlayOpacity: number;
+  blur: number;
+}
+
 // 用户设置
 interface Settings {
   theme: 'light' | 'dark';
   background: {
-    type: 'solid' | 'gradient';
+    type: 'solid' | 'gradient' | 'image';
     value: string;
+    imageConfig?: ImageConfig;
   };
   searchEngine: 'google' | 'baidu';
 }
@@ -259,7 +277,8 @@ interface AppData {
 - [x] 数据导入/导出
 
 ### v1.1 优化
-- [ ] 背景渐变设置
+- [x] 背景渐变设置
+- [x] 自定义背景图片上传
 - [ ] 更多预设主题
 - [ ] 键盘快捷键支持
 
