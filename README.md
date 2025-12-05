@@ -13,7 +13,7 @@ A minimalist new tab page extension for Chrome/Edge that helps you quickly acces
 - **Bookmark Management** - Add, edit, delete bookmarks with auto-fetched favicons or custom icons
 - **Folder Organization** - Group bookmarks into folders for better organization
 - **Search Integration** - Built-in search box with Google and Baidu engine support
-- **Theme Support** - Light/Dark mode with customizable background colors and gradients
+- **Theme Support** - Light/Dark mode with customizable background colors and images
 - **Drag & Drop** - Reorder bookmarks and folders with intuitive drag-and-drop
 - **Data Portability** - Import/Export your data in JSON format
 
@@ -99,7 +99,7 @@ MIT
 - **书签管理** - 添加、编辑、删除书签，支持自动获取网站图标或自定义图标
 - **文件夹分组** - 将书签整理到文件夹中，方便分类管理
 - **搜索集成** - 内置搜索框，支持 Google 和百度搜索引擎
-- **主题支持** - 明亮/暗黑模式切换，可自定义背景颜色和渐变
+- **主题支持** - 明亮/暗黑模式切换，可自定义背景颜色和图片
 - **拖拽排序** - 通过拖拽直观地重新排列书签和文件夹
 - **数据导入导出** - 支持 JSON 格式的数据备份与恢复
 

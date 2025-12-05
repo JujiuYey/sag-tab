@@ -1,6 +1,6 @@
 export type Theme = 'light' | 'dark'
 export type SearchEngine = 'google' | 'baidu'
-export type BackgroundType = 'solid' | 'gradient' | 'image'
+export type BackgroundType = 'solid' | 'image'
 export type ImageDisplayMode = 'cover' | 'contain' | 'fill' | 'tile' | 'center'
 
 export interface ImageConfig {

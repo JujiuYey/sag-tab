@@ -122,7 +122,6 @@ sag-tab
 
 #### 2.5.2 背景设置
 - 纯色背景：预设 7 种颜色供选择
-- 渐变背景：预设 6 种渐变效果供选择
 - 自定义图片背景：
   - 支持上传本地图片（JPG、PNG、GIF、WebP）
   - 图片自动压缩（最大 1920x1080，目标 500KB）
@@ -231,7 +230,7 @@ interface ImageConfig {
 interface Settings {
   theme: 'light' | 'dark';
   background: {
-    type: 'solid' | 'gradient' | 'image';
+    type: 'solid' | 'image';
     value: string;
     imageConfig?: ImageConfig;
   };
@@ -277,7 +276,6 @@ interface AppData {
 - [x] 数据导入/导出
 
 ### v1.1 优化
-- [x] 背景渐变设置
 - [x] 自定义背景图片上传
 - [ ] 更多预设主题
 - [ ] 键盘快捷键支持

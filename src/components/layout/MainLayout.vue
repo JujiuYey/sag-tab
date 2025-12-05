@@ -48,10 +48,6 @@ const backgroundStyle = computed(() => {
     return styles
   }
 
-  if (type === 'gradient') {
-    return { background: value }
-  }
-
   return { backgroundColor: value }
 })
 

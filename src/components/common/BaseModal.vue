@@ -1,18 +1,31 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted } from 'vue'
+import { computed, onMounted, onUnmounted } from 'vue'
+
+type ModalSize = 'sm' | 'md' | 'lg'
 
 interface Props {
   title?: string
   showClose?: boolean
+  size?: ModalSize
 }
 
 const props = withDefaults(defineProps<Props>(), {
   showClose: true,
+  size: 'md',
 })
 
 const emit = defineEmits<{
   close: []
 }>()
+
+const sizeClass = computed(() => {
+  const sizeMap: Record<ModalSize, string> = {
+    sm: 'max-w-sm',
+    md: 'max-w-md',
+    lg: 'max-w-2xl',
+  }
+  return sizeMap[props.size]
+})
 
 function handleKeydown(e: KeyboardEvent) {
   if (e.key === 'Escape') {
@@ -39,7 +52,8 @@ onUnmounted(() => {
         @click="emit('close')"
       />
       <div
-        class="relative z-10 w-full max-w-md rounded-xl bg-white p-6 shadow-xl dark:bg-gray-800"
+        class="relative z-10 w-full rounded-xl bg-white p-6 shadow-xl dark:bg-gray-800"
+        :class="sizeClass"
       >
         <div v-if="props.title || showClose" class="mb-4 flex items-center justify-between">
           <h2 v-if="props.title" class="text-lg font-semibold text-gray-900 dark:text-white">
