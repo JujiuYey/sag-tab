@@ -17,6 +17,8 @@ const editingFolder = ref<Folder | null>(null)
 const deletingBookmark = ref<Bookmark | null>(null)
 const deletingFolder = ref<Folder | null>(null)
 const openFolder = ref<Folder | null>(null)
+const showDeleteBookmarkDialog = ref(false)
+const showDeleteFolderDialog = ref(false)
 
 type GridItem =
   | { type: 'bookmark'; data: Bookmark }
@@ -55,10 +57,16 @@ async function handleBookmarkSubmit(data: { name: string; url: string; icon?: st
   editingBookmark.value = null
 }
 
+function handleDeleteBookmarkClick(bookmark: Bookmark) {
+  deletingBookmark.value = bookmark
+  showDeleteBookmarkDialog.value = true
+}
+
 async function handleDeleteBookmark() {
   if (deletingBookmark.value) {
     await bookmarkStore.deleteBookmark(deletingBookmark.value.id)
     deletingBookmark.value = null
+    showDeleteBookmarkDialog.value = false
   }
 }
 
@@ -82,10 +90,16 @@ async function handleFolderSubmit(data: { name: string; icon?: string }) {
   editingFolder.value = null
 }
 
+function handleDeleteFolderClick(folder: Folder) {
+  deletingFolder.value = folder
+  showDeleteFolderDialog.value = true
+}
+
 async function handleDeleteFolder() {
   if (deletingFolder.value) {
     await folderStore.deleteFolder(deletingFolder.value.id, true)
     deletingFolder.value = null
+    showDeleteFolderDialog.value = false
     openFolder.value = null
   }
 }
@@ -103,14 +117,14 @@ function handleOpenFolder(folder: Folder) {
           v-if="item.type === 'bookmark'"
           :bookmark="item.data"
           @edit="handleEditBookmark(item.data)"
-          @delete="deletingBookmark = item.data"
+          @delete="handleDeleteBookmarkClick(item.data)"
         />
         <FolderCard
           v-else
           :folder="item.data"
           @click="handleOpenFolder(item.data)"
           @edit="handleEditFolder(item.data)"
-          @delete="deletingFolder = item.data"
+          @delete="handleDeleteFolderClick(item.data)"
         />
       </template>
 
@@ -136,19 +150,19 @@ function handleOpenFolder(folder: Folder) {
     </div>
 
     <BookmarkForm
-      v-if="showBookmarkForm"
       :bookmark="editingBookmark ?? undefined"
       :mode="editingBookmark ? 'edit' : 'add'"
+      :open="showBookmarkForm"
       @submit="handleBookmarkSubmit"
-      @close="showBookmarkForm = false"
+      @update:open="showBookmarkForm = $event"
     />
 
     <FolderForm
-      v-if="showFolderForm"
       :folder="editingFolder ?? undefined"
       :mode="editingFolder ? 'edit' : 'add'"
+      :open="showFolderForm"
       @submit="handleFolderSubmit"
-      @close="showFolderForm = false"
+      @update:open="showFolderForm = $event"
     />
 
     <FolderPopover
@@ -156,23 +170,25 @@ function handleOpenFolder(folder: Folder) {
       :folder="openFolder"
       @close="openFolder = null"
       @edit="handleEditFolder(openFolder!)"
-      @delete="deletingFolder = openFolder"
+      @delete="handleDeleteFolderClick(openFolder!)"
     />
 
     <ConfirmDialog
-      v-if="deletingBookmark"
+      :open="showDeleteBookmarkDialog"
       title="删除书签"
-      :message="`确定要删除书签「${deletingBookmark.name}」吗？`"
+      :message="deletingBookmark ? `确定要删除书签「${deletingBookmark.name}」吗？` : ''"
       @confirm="handleDeleteBookmark"
-      @cancel="deletingBookmark = null"
+      @cancel="showDeleteBookmarkDialog = false; deletingBookmark = null"
+      @update:open="(v) => { if (!v) { showDeleteBookmarkDialog = false; deletingBookmark = null } }"
     />
 
     <ConfirmDialog
-      v-if="deletingFolder"
+      :open="showDeleteFolderDialog"
       title="删除文件夹"
-      :message="`确定要删除文件夹「${deletingFolder.name}」及其所有书签吗？`"
+      :message="deletingFolder ? `确定要删除文件夹「${deletingFolder.name}」及其所有书签吗？` : ''"
       @confirm="handleDeleteFolder"
-      @cancel="deletingFolder = null"
+      @cancel="showDeleteFolderDialog = false; deletingFolder = null"
+      @update:open="(v) => { if (!v) { showDeleteFolderDialog = false; deletingFolder = null } }"
     />
   </div>
 </template>

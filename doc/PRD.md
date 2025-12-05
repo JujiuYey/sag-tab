@@ -182,11 +182,12 @@ sag-tab
 ## 4. 技术规格
 
 ### 4.1 技术栈建议
-- 框架：React / Vue 3
+- 框架：Vue 3
 - 构建工具：Vite
-- 样式：Tailwind CSS / CSS Modules
-- 状态管理：Zustand / Pinia
-- 拖拽：dnd-kit / vuedraggable
+- 样式：Tailwind CSS v4
+- UI 组件库：shadcn-vue（基于 Radix Vue）
+- 状态管理：Pinia
+- 拖拽：vuedraggable
 
 ### 4.2 浏览器扩展 API
 - `chrome.storage.local` - 本地数据存储

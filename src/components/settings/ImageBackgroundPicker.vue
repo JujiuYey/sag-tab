@@ -2,6 +2,9 @@
 import { ref, computed } from 'vue'
 import { useSettingsStore } from '@/stores'
 import { BaseIcon } from '@/components/common'
+import { Switch } from '@/components/ui/switch'
+import { Slider } from '@/components/ui/slider'
+import { Label } from '@/components/ui/label'
 import type { ImageDisplayMode, ImageConfig } from '@/types'
 import { defaultImageConfig } from '@/types'
 import { compressImage, validateImageFile, type CompressionResult } from '@/utils'
@@ -87,12 +90,16 @@ async function updateOverlay(enabled: boolean) {
   await settingsStore.updateImageConfig({ overlay: enabled })
 }
 
-async function updateOverlayOpacity(opacity: number) {
-  await settingsStore.updateImageConfig({ overlayOpacity: opacity })
+async function updateOverlayOpacity(value: number[] | undefined) {
+  if (value) {
+    await settingsStore.updateImageConfig({ overlayOpacity: value[0] })
+  }
 }
 
-async function updateBlur(blur: number) {
-  await settingsStore.updateImageConfig({ blur })
+async function updateBlur(value: number[] | undefined) {
+  if (value) {
+    await settingsStore.updateImageConfig({ blur: value[0] })
+  }
 }
 
 function formatSize(bytes: number): string {
@@ -156,11 +163,7 @@ function formatSize(bytes: number): string {
         </div>
 
         <div>
-          <label
-            class="mb-1.5 block text-xs font-medium text-gray-600 dark:text-gray-400"
-          >
-            展示模式
-          </label>
+          <Label class="mb-1.5 block text-xs">展示模式</Label>
           <div class="flex flex-wrap gap-1.5">
             <button
               v-for="mode in displayModes"
@@ -168,8 +171,8 @@ function formatSize(bytes: number): string {
               class="rounded px-2.5 py-1 text-xs transition-colors"
               :class="[
                 imageConfig.displayMode === mode.value
-                  ? 'bg-blue-500 text-white'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600',
+                  ? 'bg-primary text-primary-foreground'
+                  : 'bg-secondary text-secondary-foreground hover:bg-secondary/80',
               ]"
               @click="updateDisplayMode(mode.value)"
             >
@@ -180,56 +183,39 @@ function formatSize(bytes: number): string {
 
         <div>
           <div class="mb-1.5 flex items-center justify-between">
-            <label class="text-xs font-medium text-gray-600 dark:text-gray-400">
-              遮罩层
-            </label>
-            <label class="relative inline-flex cursor-pointer items-center">
-              <input
-                type="checkbox"
-                :checked="imageConfig.overlay"
-                class="peer sr-only"
-                @change="updateOverlay(!imageConfig.overlay)"
-              />
-              <div
-                class="peer h-5 w-9 rounded-full bg-gray-200 after:absolute after:left-[2px] after:top-[2px] after:h-4 after:w-4 after:rounded-full after:bg-white after:transition-all peer-checked:bg-blue-500 peer-checked:after:translate-x-full dark:bg-gray-700"
-              ></div>
-            </label>
+            <Label class="text-xs">遮罩层</Label>
+            <Switch
+              :checked="imageConfig.overlay"
+              @update:checked="updateOverlay"
+            />
           </div>
 
-          <div v-if="imageConfig.overlay" class="mt-2">
-            <div
-              class="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400"
-            >
+          <div v-if="imageConfig.overlay" class="mt-3 space-y-2">
+            <div class="flex items-center justify-between text-xs text-muted-foreground">
               <span>透明度</span>
               <span>{{ imageConfig.overlayOpacity }}%</span>
             </div>
-            <input
-              type="range"
-              min="0"
-              max="80"
-              :value="imageConfig.overlayOpacity"
-              class="slider mt-1 h-1.5 w-full cursor-pointer appearance-none rounded-lg bg-gray-200 dark:bg-gray-700"
-              @input="
-                updateOverlayOpacity(Number(($event.target as HTMLInputElement).value))
-              "
+            <Slider
+              :model-value="[imageConfig.overlayOpacity]"
+              :min="0"
+              :max="80"
+              :step="1"
+              @update:model-value="updateOverlayOpacity"
             />
           </div>
         </div>
 
-        <div>
-          <div
-            class="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400"
-          >
+        <div class="space-y-2">
+          <div class="flex items-center justify-between text-xs text-muted-foreground">
             <span>背景模糊</span>
             <span>{{ imageConfig.blur }}px</span>
           </div>
-          <input
-            type="range"
-            min="0"
-            max="20"
-            :value="imageConfig.blur"
-            class="slider mt-1 h-1.5 w-full cursor-pointer appearance-none rounded-lg bg-gray-200 dark:bg-gray-700"
-            @input="updateBlur(Number(($event.target as HTMLInputElement).value))"
+          <Slider
+            :model-value="[imageConfig.blur]"
+            :min="0"
+            :max="20"
+            :step="1"
+            @update:model-value="updateBlur"
           />
         </div>
       </div>
@@ -248,24 +234,3 @@ function formatSize(bytes: number): string {
     />
   </div>
 </template>
-
-<style scoped>
-.slider::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  background: #3b82f6;
-  cursor: pointer;
-}
-
-.slider::-moz-range-thumb {
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  background: #3b82f6;
-  cursor: pointer;
-  border: none;
-}
-</style>

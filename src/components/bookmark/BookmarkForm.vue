@@ -1,18 +1,28 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import type { Bookmark } from '@/types'
-import { BaseModal, BaseButton } from '@/components/common'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from '@/components/ui/dialog'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 
 interface Props {
   bookmark?: Bookmark
   mode: 'add' | 'edit'
+  open: boolean
 }
 
 const props = defineProps<Props>()
 
 const emit = defineEmits<{
   submit: [data: { name: string; url: string; icon?: string }]
-  close: []
+  'update:open': [value: boolean]
 }>()
 
 const name = ref(props.bookmark?.name || '')
@@ -33,60 +43,61 @@ function handleSubmit() {
     icon: icon.value.trim() || undefined,
   })
 }
+
+function handleOpenChange(value: boolean) {
+  emit('update:open', value)
+}
 </script>
 
 <template>
-  <BaseModal
-    :title="mode === 'add' ? '添加书签' : '编辑书签'"
-    @close="emit('close')"
-  >
-    <form @submit.prevent="handleSubmit" class="space-y-4">
-      <div>
-        <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
-          名称
-        </label>
-        <input
-          v-model="name"
-          type="text"
-          required
-          class="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
-          placeholder="网站名称"
-        />
-      </div>
+  <Dialog :open="open" @update:open="handleOpenChange">
+    <DialogContent class="sm:max-w-md">
+      <DialogHeader>
+        <DialogTitle>{{ mode === 'add' ? '添加书签' : '编辑书签' }}</DialogTitle>
+      </DialogHeader>
 
-      <div>
-        <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
-          网址
-        </label>
-        <input
-          v-model="url"
-          type="text"
-          required
-          class="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
-          placeholder="https://example.com"
-        />
-      </div>
+      <form @submit.prevent="handleSubmit" class="space-y-4">
+        <div class="space-y-2">
+          <Label for="name">名称</Label>
+          <Input
+            id="name"
+            v-model="name"
+            type="text"
+            required
+            placeholder="网站名称"
+          />
+        </div>
 
-      <div>
-        <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
-          图标 URL（可选）
-        </label>
-        <input
-          v-model="icon"
-          type="text"
-          class="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
-          placeholder="留空将自动获取网站图标"
-        />
-      </div>
+        <div class="space-y-2">
+          <Label for="url">网址</Label>
+          <Input
+            id="url"
+            v-model="url"
+            type="text"
+            required
+            placeholder="https://example.com"
+          />
+        </div>
 
-      <div class="flex justify-end gap-3 pt-2">
-        <BaseButton type="button" variant="secondary" @click="emit('close')">
-          取消
-        </BaseButton>
-        <BaseButton type="submit">
-          {{ mode === 'add' ? '添加' : '保存' }}
-        </BaseButton>
-      </div>
-    </form>
-  </BaseModal>
+        <div class="space-y-2">
+          <Label for="icon">图标 URL（可选）</Label>
+          <Input
+            id="icon"
+            v-model="icon"
+            type="text"
+            placeholder="留空将自动获取网站图标"
+          />
+        </div>
+
+        <DialogFooter>
+          <Button type="button" variant="outline" @click="handleOpenChange(false)">
+            取消
+          </Button>
+          <Button type="submit">
+            {{ mode === 'add' ? '添加' : '保存' }}
+          </Button>
+        </DialogFooter>
+      </form>
+    </DialogContent>
+  </Dialog>
 </template>

@@ -1,8 +1,17 @@
 <script setup lang="ts">
-import BaseModal from './BaseModal.vue'
-import BaseButton from './BaseButton.vue'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
 
 interface Props {
+  open: boolean
   title?: string
   message: string
   confirmText?: string
@@ -20,19 +29,36 @@ withDefaults(defineProps<Props>(), {
 const emit = defineEmits<{
   confirm: []
   cancel: []
+  'update:open': [value: boolean]
 }>()
+
+function handleConfirm() {
+  emit('confirm')
+  emit('update:open', false)
+}
+
+function handleCancel() {
+  emit('cancel')
+  emit('update:open', false)
+}
 </script>
 
 <template>
-  <BaseModal :title="title" @close="emit('cancel')">
-    <p class="mb-6 text-gray-600 dark:text-gray-300">{{ message }}</p>
-    <div class="flex justify-end gap-3">
-      <BaseButton variant="secondary" @click="emit('cancel')">
-        {{ cancelText }}
-      </BaseButton>
-      <BaseButton :variant="variant" @click="emit('confirm')">
-        {{ confirmText }}
-      </BaseButton>
-    </div>
-  </BaseModal>
+  <AlertDialog :open="open" @update:open="(v: boolean) => !v && handleCancel()">
+    <AlertDialogContent>
+      <AlertDialogHeader>
+        <AlertDialogTitle>{{ title }}</AlertDialogTitle>
+        <AlertDialogDescription>{{ message }}</AlertDialogDescription>
+      </AlertDialogHeader>
+      <AlertDialogFooter>
+        <AlertDialogCancel @click="handleCancel">{{ cancelText }}</AlertDialogCancel>
+        <AlertDialogAction
+          :class="variant === 'danger' ? 'bg-destructive text-destructive-foreground hover:bg-destructive/90' : ''"
+          @click="handleConfirm"
+        >
+          {{ confirmText }}
+        </AlertDialogAction>
+      </AlertDialogFooter>
+    </AlertDialogContent>
+  </AlertDialog>
 </template>

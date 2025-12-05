@@ -32,9 +32,35 @@ node scripts/generate-icons.mjs
 - **Pinia** for state management
 - **VueUse** for utility composables
 - **Tailwind CSS v4** for styling (via @tailwindcss/vite plugin)
+- **shadcn-vue** for UI components (based on Radix Vue)
 - **Vite 7** as the build tool
 - **pnpm** as the package manager
 - **Chrome Extension Manifest V3**
+
+### shadcn-vue
+
+项目使用 [shadcn-vue](https://www.shadcn-vue.com/) 作为 UI 组件库。shadcn-vue 基于 Radix Vue 和 Tailwind CSS，组件源码直接复制到项目中，便于完全自定义。
+
+**组件存放位置**: `src/components/ui/`
+
+**常用组件**:
+- `Button` - 按钮组件
+- `Dialog` - 对话框/模态框
+- `Popover` - 弹出层
+- `Input` - 输入框
+- `Select` - 下拉选择
+- `Card` - 卡片容器
+- `Slider` - 滑块（用于透明度、模糊度调节）
+- `Switch` - 开关
+- `Tabs` - 标签页
+- `DropdownMenu` - 下拉菜单
+
+**添加新组件**:
+```bash
+npx shadcn-vue@latest add <component-name>
+```
+
+**配置文件**: `components.json` (shadcn-vue 配置)
 
 ## Project Structure
 
@@ -65,10 +91,19 @@ src/
 │   ├── export.ts           # Data export/import
 │   └── imageCompressor.ts  # Image compression for background upload
 └── components/             # Vue components
-    ├── common/             # Reusable UI components
-    │   ├── BaseButton.vue
+    ├── ui/                 # shadcn-vue UI components
+    │   ├── button/
+    │   ├── dialog/
+    │   ├── input/
+    │   ├─�� popover/
+    │   ├── select/
+    │   ├── card/
+    │   ├── slider/
+    │   ├── switch/
+    │   ├── tabs/
+    │   └── dropdown-menu/
+    ├── common/             # Custom reusable components
     │   ├── BaseIcon.vue
-    │   ├── BaseModal.vue
     │   └── ConfirmDialog.vue
     ├── layout/             # Layout components
     │   └── MainLayout.vue
