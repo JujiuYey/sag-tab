@@ -20,7 +20,7 @@ export const useBookmarkStore = defineStore('bookmark', () => {
 
   async function loadBookmarks() {
     const stored = await getStorage<Bookmark[]>(STORAGE_KEYS.BOOKMARKS)
-    if (stored) {
+    if (Array.isArray(stored)) {
       bookmarks.value = stored
     }
   }

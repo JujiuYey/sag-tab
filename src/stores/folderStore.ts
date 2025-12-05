@@ -13,7 +13,7 @@ export const useFolderStore = defineStore('folder', () => {
 
   async function loadFolders() {
     const stored = await getStorage<Folder[]>(STORAGE_KEYS.FOLDERS)
-    if (stored) {
+    if (Array.isArray(stored)) {
       folders.value = stored
     }
   }
